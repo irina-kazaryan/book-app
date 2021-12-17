@@ -145,7 +145,6 @@ export class AddBookComponent implements OnInit, OnDestroy {
   }
 
   private formReset() {
-    //this.form.reset();
     this.form.updateValueAndValidity()
 
     this.submitted = false;
