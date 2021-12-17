@@ -6,7 +6,7 @@
   </section>
   <section class="py-5 d-flex justify-content-center">
     <form
-      (ngSubmit)="signUp(form.value)"
+      (ngSubmit)="signUp(form)"
       #form="ngForm"
       [mustMatch]="['password', 'repeatPassword']"
     >
