@@ -1,0 +1,24 @@
+<main>
+  <section>
+    <div class="h-100 text-dark text-center">
+      <h1 class="pt-4">{{ "content.WELCOME_TO_BOOKVERSE" | translate }}!</h1>
+      <h3 class="pt-2">{{ "content.LET_S_START_OUR_JOURNEY" | translate }}!</h3>
+      <p class="pt-4 pb-3">
+        <button type="button" class="btn btn-warning" (click)="goToAddBook()">
+          {{ "content.ADD_BOOK" | translate }}
+        </button>
+      </p>
+    </div>
+  </section>
+  <section>
+    <div class="album py-5 bg-light">
+      <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+          <ng-container *ngFor="let item of books$ | async">
+            <app-book-list-item [item]="item"></app-book-list-item>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

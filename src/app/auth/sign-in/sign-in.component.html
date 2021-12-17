@@ -1,0 +1,64 @@
+<main>
+  <section class="py-5 text-center middle">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light text-warning font-weight-bold">{{ "auth.SIGN_IN" | translate }}</h1>
+    </div>
+  </section>
+  <section class="py-5 d-flex justify-content-center">
+    <form (ngSubmit)="signIn(form.value)" #form="ngForm">
+      <ng-container *ngIf="form.submitted && form.invalid">
+        <div
+          class="alert alert-danger mt-3 mb-2"
+          role="alert"
+          *ngIf="form.controls.email?.errors?.required"
+        >
+          {{ "auth.EMAIL" | translate }}&nbsp;{{ "errors.IS_MANDATORY" | translate }}
+        </div>
+        <div
+          class="alert alert-danger mt-3 mb-2"
+          role="alert"
+          *ngIf="form.controls.email?.errors?.pattern"
+        >
+          {{ "errors.PROVIDE_VALID" | translate }}&nbsp;{{ "auth.EMAIL" | translate }}
+        </div>
+        <div
+          class="alert alert-danger mt-1"
+          role="alert"
+          *ngIf="form.controls.password?.errors?.required"
+        >
+          {{ "auth.PASSWORD" | translate }}&nbsp;{{
+            "errors.IS_MANDATORY" | translate
+          }}
+        </div>
+      </ng-container>
+      <div class="form-floating mb-2">
+        <input
+          type="email"
+          class="form-control"
+          ngModel
+          name="email"
+          required
+          id="floatingInput"
+          placeholder="name@example.com"
+          pattern="(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|'(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*')@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"
+        />
+        <label for="floatingInput">{{ "auth.EMAIL" | translate }}</label>
+      </div>
+      <div class="form-floating mb-2">
+        <input
+          type="password"
+          class="form-control"
+          ngModel
+          required
+          name="password"
+          id="floatingPassword"
+          placeholder="password"
+        />
+        <label for="floatingPassword">{{ "auth.PASSWORD" | translate }}</label>
+      </div>
+      <button class="w-100 btn btn-lg btn-outline-warning" type="submit">
+        {{ "auth.SIGN_IN" | translate }}
+      </button>
+    </form>
+  </section>
+</main>

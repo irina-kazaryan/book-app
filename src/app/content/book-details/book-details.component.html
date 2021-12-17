@@ -1,0 +1,180 @@
+<div class="container pt-3">
+  <div class="row">
+    <div class="col-md-6">
+      <ng-container *ngIf="bookData$ | async as bookData">
+        <div class="row">
+          <h2>{{ bookData.volumeInfo.title }}</h2>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <img
+              [src]="bookData.volumeInfo.imageLinks?.thumbnail"
+              class="img-thumbnail"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 pt-2 pb-5">
+            <div class="row" *ngIf="bookData.volumeInfo.authors">
+              <div class="d-inline">
+                <strong>{{ "content.AUTHORS" | translate }}:&nbsp;</strong>
+                <span>{{ bookData.volumeInfo.authors }}</span>
+              </div>
+            </div>
+            <div class="row" *ngIf="bookData.volumeInfo.publisher">
+              <div class="d-inline">
+                <strong>{{ "content.PUBLISHER" | translate }}:&nbsp;</strong>
+                <span>{{ bookData.volumeInfo.publisher }}</span>
+              </div>
+            </div>
+            <div class="row" *ngIf="bookData.volumeInfo.publishedDate">
+              <div class="d-inline">
+                <strong
+                  >{{ "content.PUBLISHED_DATE" | translate }}:&nbsp;</strong
+                >
+                <span>{{ bookData.volumeInfo.publishedDate }}</span>
+              </div>
+            </div>
+            <div class="row" *ngIf="bookData.volumeInfo.categories">
+              <div class="d-inline">
+                <strong>{{ "content.CATEGORIES" | translate }}:&nbsp;</strong>
+                <span>{{ bookData.volumeInfo.categories }}</span>
+              </div>
+            </div>
+            <div class="row" *ngIf="bookData.volumeInfo.language">
+              <div class="d-inline">
+                <strong>{{ "content.LANGUAGE" | translate }}:&nbsp;</strong>
+                <span>{{ bookData.volumeInfo.language }}</span>
+              </div>
+            </div>
+            <div class="row mt-2" *ngIf="bookData.volumeInfo.description">
+              <div class="d-inline">
+                <strong>{{ "content.DESCRIPTION" | translate }}:&nbsp;</strong>
+                <span [innerHTML]="bookData.volumeInfo.description"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-1 offset-md-11">
+          <button
+            (click)="delete()"
+            type="button"
+            class="btn btn-md-1 btn-outline-danger"
+            title="{{ 'content.DELETE' | translate }}"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-eraser-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <ng-container *ngIf="storeData$ | async as storeData">
+        <div class="row">
+          <div class="d-inline">
+            <strong>{{ "content.REVIEW" | translate }}:&nbsp;</strong>
+            <span class="text-break">{{ storeData.review }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="d-inline align-self-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-star-fill text-warning"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+              >
+                <title>{{ "content.FAVORITE" | translate }}</title>
+              </path>
+            </svg>
+            <strong>{{ "content.RATING" | translate }}:&nbsp;</strong>
+            <span>{{ storeData.rating | outOf: 5 }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="d-inline">
+            <strong>{{ "content.STATUS" | translate }}:&nbsp;</strong>
+            <ng-container [ngSwitch]="storeData.status">
+              <span *ngSwitchCase="Status.ToRead">{{
+                "content.TO_READ" | translate
+              }}</span>
+              <span *ngSwitchCase="Status.ReadingNow">
+                {{ "content.READING_NOW" | translate }}</span
+              >
+              <span *ngSwitchCase="Status.HaveRead">{{
+                "content.HAVE_READ" | translate
+              }}</span>
+            </ng-container>
+          </div>
+        </div>
+        <div class="row" *ngIf="storeData.whenToStartReading">
+          <div class="d-inline">
+            <strong
+              >{{ "content.WHEN_TO_START_READING" | translate }}:&nbsp;</strong
+            >
+            <ng-container [ngSwitch]="storeData.whenToStartReading">
+              <span *ngSwitchCase="WhenToStartReading.Today">{{
+                "content.TODAY" | translate
+              }}</span>
+              <span *ngSwitchCase="WhenToStartReading.Tomorrow">
+                {{ "content.TOMORROW" | translate }}</span
+              >
+              <span *ngSwitchCase="WhenToStartReading.TheDayAfterTomorrow">{{
+                "content.THE_DAY_AFTER_TOMORROW" | translate
+              }}</span>
+              <span *ngSwitchCase="WhenToStartReading.ThisWeek">{{
+                "content.THIS_WEEK" | translate
+              }}</span>
+              <span *ngSwitchCase="WhenToStartReading.ThisMonth">{{
+                "content.THIS_MONTH" | translate
+              }}</span>
+              <span *ngSwitchCase="WhenToStartReading.ThisYear">{{
+                "content.THIS_YEAR" | translate
+              }}</span>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="row mt-3 mb-5">
+    <div class="col-md-2">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="goBack()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-arrow-left"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

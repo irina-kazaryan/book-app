@@ -1,0 +1,278 @@
+<main>
+  <section class="py-3 text-center middle">
+    <div class="col-lg-6 col-md-8 mx-auto mt-5">
+      <h1 class="fw-light text-warning">
+        {{ "content.ADD_BOOK" | translate }}
+      </h1>
+    </div>
+  </section>
+
+  <div class="py-5">
+    <div class="container d-flex justify-content-center flex-column w-100">
+      <div class="row d-flex justify-content-center">
+        <div class="search-form d-flex justify-content-center flex-column">
+          <div
+            class="alert alert-danger mt-2 mb-2"
+            role="alert"
+            *ngIf="searchHasError"
+          >
+            {{ "content.ENTER" | translate }}&nbsp;{{
+              "content.BOOK_S" | translate
+            }}&nbsp;{{ "content.TITLE" | translate }}
+          </div>
+          <input
+            type="text"
+            class="form-control mt-2"
+            [(ngModel)]="searchKey"
+            placeholder="{{ 'content.ENTER' | translate }}&nbsp;{{
+              'content.BOOK_S' | translate
+            }}&nbsp;{{ 'content.TITLE' | translate }}..."
+          />
+          <button class="btn btn-outline-warning mt-2" (click)="search()">
+            <i class="bi bi-search"></i>&nbsp;{{ "content.SEARCH" | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-center mt-2 flex-row mb-3">
+        <div class="d-flex justify-content-center">
+          <span
+            (click)="fetchBook(name)"
+            class="badge rounded-pill bg-success ms-1"
+            *ngFor="let name of lastThreeSearches"
+            >{{ name }}</span
+          >
+        </div>
+      </div>
+
+      <div class="row mt-5" *ngIf="selectedBook$ | async as selectedBook">
+        <div class="col-sm-6">
+          <div class="row">
+            <h2>{{ selectedBook.title }}</h2>
+          </div>
+          <div class="row mt-3">
+            <div class="col-sm-3">
+              <img [src]="selectedBook.imageUrl" class="img-fluid img-thumbnail"/>
+            </div>
+            <div class="col-sm-8">
+              <div class="row" *ngIf="selectedBook.authors">
+                <div class="d-inline">
+                  <strong>{{ "content.AUTHORS" | translate }}:&nbsp;</strong>
+                  <span>{{ selectedBook.authors }}</span>
+                </div>
+              </div>
+              <div class="row" *ngIf="selectedBook.publisher">
+                <div class="d-inline">
+                  <strong>{{ "content.PUBLISHER" | translate }}:&nbsp;</strong>
+                  <span>{{ selectedBook.publisher }}</span>
+                </div>
+              </div>
+              <div class="row" *ngIf="selectedBook.publishedDate">
+                <div class="d-inline">
+                  <strong
+                    >{{ "content.PUBLISHED_DATE" | translate }}:&nbsp;</strong
+                  >
+                  <span>{{ selectedBook.publishedDate }}</span>
+                </div>
+              </div>
+              <div class="row" *ngIf="selectedBook.categories">
+                <div class="d-inline">
+                  <strong>{{ "content.CATEGORIES" | translate }}:&nbsp;</strong>
+                  <span>{{ selectedBook.categories }}</span>
+                </div>
+              </div>             
+              <div class="row" *ngIf="selectedBook.language">
+                <div class="d-inline">
+                  <strong>{{ "content.LANGUAGE" | translate }}:&nbsp;</strong>
+                  <span>{{ selectedBook.language }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-2" *ngIf="selectedBook.description">
+            <div class="d-inline">
+              <strong>{{ "content.DESCRIPTION" | translate }}:&nbsp;</strong>
+              <span>{{ selectedBook.description }}</span>
+            </div>
+          </div>
+          <div
+            class="
+              add-form
+              row
+              d-flex
+              justify-content-center
+              mt-2
+              flex-row
+              mb-3
+            "
+          >
+            <ng-container *ngIf="submitted && form.invalid">
+              <div
+                class="alert alert-danger mt-2"
+                role="alert"
+                *ngIf="form.controls.review?.errors?.required"
+              >
+                {{ "content.REVIEW" | translate }}&nbsp;{{
+                  "errors.IS_MANDATORY" | translate
+                }}
+              </div>
+              <div
+                class="alert alert-danger mt-2"
+                role="alert"
+                *ngIf="form.controls.review?.errors?.minlength || form.controls.review?.errors?.maxlength"
+              >
+                {{ "content.REVIEW" | translate }}&nbsp;{{
+                  "errors.MUST_CONTAIN" | translate
+                }}&nbsp;{{ reviewMinLength }}-{{ reviewMaxLength }}&nbsp;{{
+                  "errors.SYMBOLS" | translate
+                }}
+              </div>
+              <div
+                class="alert alert-danger mt-2"
+                role="alert"
+                *ngIf="form.controls.whenToStartReading?.errors?.required"
+              >
+                {{ "errors.PLEASE_SELECT" | translate }}&nbsp;{{
+                  "content.WHEN_TO_START_READING" | translate
+                }}
+              </div>
+            </ng-container>
+            <div class="row mt-3" *ngIf="selectedBook">
+              <form [formGroup]="form" (submit)="submit(selectedBook)">               
+                <div class="row mb-3">
+                  <label for="rating" class="col-sm-4 col-form-label">{{
+                    "content.RATING" | translate
+                  }}</label>
+                  <div class="col-sm-8  align-self-center">
+                    <span class="me-2" *ngFor="let rating of ratings">
+                      <input
+                        type="radio"
+                        class="form-check-input"
+                        [value]="rating"
+                        formControlName="rating"
+                        [title]="rating"
+                      />
+                    </span>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="favorite" class="col-sm-4 col-form-label">{{
+                    "content.FAVORITE" | translate
+                  }}</label>
+                  <div class="col-sm-8 align-self-center">
+                    <input
+                      type="checkbox"
+                      formControlName="favorite"
+                      class="form-check-input"
+                      id="favorite"
+                    />
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="status" class="col-sm-4 col-form-label">{{
+                    "content.STATUS" | translate
+                  }}</label>
+                  <div class="col-sm-8">
+                    <select class="form-select" formControlName="status">
+                      <option [value]="status.ToRead">
+                        {{ "content.TO_READ" | translate }}
+                      </option>
+                      <option [value]="status.ReadingNow">
+                        {{ "content.READING_NOW" | translate }}
+                      </option>
+                      <option [value]="status.HaveRead">
+                        {{ "content.HAVE_READ" | translate }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row mb-3" *ngIf="canStartReading">
+                  <label
+                    for="whenToStartReading"
+                    class="col-sm-4 col-form-label"
+                    >{{ "content.WHEN_TO_START_READING" | translate }}</label
+                  >
+                  <div class="col-sm-8">
+                    <select
+                      class="form-select"
+                      formControlName="whenToStartReading"
+                    >
+                      <option [value]="null" hidden>
+                        {{ "content.SELECT" | translate }}
+                      </option>
+                      <option
+                        *ngFor="let w of whenToStartReading"
+                        [value]="w.value"
+                      >
+                        {{ w.label | translate }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="review" class="col-sm-4 col-form-label">{{
+                    "content.REVIEW" | translate
+                  }}</label>
+                  <div class="col-sm-8">
+                    <textarea
+                      formControlName="review"
+                      class="form-control"
+                      id="review"
+                    ></textarea>
+                    <span
+                      appCharacter
+                      [length]="form.controls.review?.value.length"
+                      [minLength]="reviewMinLength"
+                      [maxLength]="reviewMaxLength"
+                      >{{ form.controls.review?.value.length }}</span
+                    >/{{ reviewMaxLength }}
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-success">
+                  {{ "content.ADD" | translate }}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6" *ngIf="selectedBook.movie">
+          <div class="row">
+            <h4>
+              {{ "content.MOVIE_BASE_ON_THE_BOOK" | translate }}:&nbsp;{{ selectedBook.movie.title }}
+            </h4>
+          </div>
+          <div class="row mt-3">
+            <div class="col-sm-4">
+              <img [src]="selectedBook.movie.posterUrl" class="img-fluid img-thumbnail"/>
+            </div>
+            <div class="col-sm-8">
+              <div class="row" *ngIf="selectedBook.movie.actors">
+                <div class="d-inline">
+                  <strong>{{ "content.ACTORS" | translate }}:&nbsp;</strong>
+                  <span>{{ selectedBook.movie.actors }}</span>
+                </div>
+              </div>
+              <div class="row" *ngIf="selectedBook.movie.genre">
+                <div class="d-inline">
+                  <strong>{{ "content.GENRE" | translate }}:&nbsp;</strong>
+                  <span>{{ selectedBook.movie.genre }}</span>
+                </div>
+              </div>
+              <div class="row" *ngIf="selectedBook.movie.director">
+                <div class="d-inline">
+                  <strong>{{ "content.DIRECTOR" | translate }}:&nbsp;</strong>
+                  <span>{{ selectedBook.movie.director }}</span>
+                </div>
+              </div>
+              <div class="row" *ngIf="selectedBook.movie.year">
+                <div class="d-inline">
+                  <strong>{{ "content.YEAR" | translate }}:&nbsp;</strong>
+                  <span>{{ selectedBook.movie.year }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
