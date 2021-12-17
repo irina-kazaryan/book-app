@@ -26,6 +26,10 @@ export class SignInComponent implements OnInit {
   ) {}
 
   signIn({ email, password }: SignInForm) {
+    if (!email || !password) {
+      return;
+    }
+    
     this.loadingService.start();
     from(this.auth.signIn({ email, password }))
       .pipe(finalize(() => this.loadingService.stop()))
